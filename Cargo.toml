@@ -171,7 +171,7 @@ criterion-stats = "0.3.0"
 crossbeam-channel = "0.5.8"
 csv = "1.2.2"
 ctrlc = "3.4.0"
-curve25519-dalek = "3.2.1"
+curve25519-dalek = {version =  "4.0.0" ,features = ["digest","rand_core","legacy_compatibility"]}
 dashmap = "4.0.2"
 derivation-path = { version = "0.2.0", default-features = false }
 dialoguer = "0.10.4"
