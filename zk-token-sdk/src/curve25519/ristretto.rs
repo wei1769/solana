@@ -63,9 +63,13 @@ mod target_arch {
         type Error = Curve25519Error;
 
         fn try_from(pod: &PodRistrettoPoint) -> Result<Self, Self::Error> {
-            CompressedRistretto::from_slice(&pod.0)
-                .decompress()
-                .ok_or(Curve25519Error::PodConversion)
+            match CompressedRistretto::from_slice(&pod.0) {
+                Ok(s) => match s.decompress() {
+                    Some(s) => Ok(s),
+                    None => Err(Curve25519Error::PodConversion),
+                },
+                Err(_) => Err(Curve25519Error::PodConversion),
+            }
         }
     }
 
@@ -73,9 +77,10 @@ mod target_arch {
         type Point = Self;
 
         fn validate_point(&self) -> bool {
-            CompressedRistretto::from_slice(&self.0)
-                .decompress()
-                .is_some()
+            match CompressedRistretto::from_slice(&self.0) {
+                Ok(result) => result.decompress().is_some(),
+                Err(_) => false,
+            }
         }
     }
 

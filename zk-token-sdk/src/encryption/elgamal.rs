@@ -88,7 +88,8 @@ impl ElGamal {
     #[allow(non_snake_case)]
     fn keygen() -> ElGamalKeypair {
         // secret scalar should be non-zero except with negligible probability
-        let mut s = Scalar::random(&mut OsRng);
+        let mut csprng = OsRng;
+        let mut s = Scalar::random(&mut csprng);
         let keypair = Self::keygen_with_scalar(&s);
 
         s.zeroize();
@@ -483,7 +484,13 @@ impl ElGamalSecretKey {
 
     pub fn from_bytes(bytes: &[u8]) -> Option<ElGamalSecretKey> {
         match bytes.try_into() {
-            Ok(bytes) => Scalar::from_canonical_bytes(bytes).map(ElGamalSecretKey),
+            Ok(bytes) => {
+                let result = Scalar::from_canonical_bytes(bytes);
+                if result.is_some().into() {
+                    return Some(result.unwrap().into());
+                }
+                None
+            }
             _ => None,
         }
     }

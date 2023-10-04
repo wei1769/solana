@@ -225,13 +225,10 @@ fn bip32_derived_keypair(
     seed: &[u8],
     derivation_path: DerivationPath,
 ) -> Result<Keypair, Bip32Error> {
-    let extended = ed25519_dalek_bip32::ExtendedSecretKey::from_seed(seed)
+    let extended = ed25519_dalek_bip32::ExtendedSigningKey::from_seed(seed)
         .and_then(|extended| extended.derive(&derivation_path))?;
-    let extended_public_key = extended.public_key();
-    Ok(Keypair(ed25519_dalek::Keypair {
-        secret: extended.secret_key,
-        public: extended_public_key,
-    }))
+    let extended_public_key = extended.signing_key.verifying_key();
+    Ok(Keypair(extended.signing_key))
 }
 
 pub fn generate_seed_from_seed_phrase_and_passphrase(
