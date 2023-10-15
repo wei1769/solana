@@ -1018,6 +1018,12 @@ impl EncodedTransactionWithStatusMeta {
 
         return vec![];
     }
+    pub fn is_failed(&self) -> bool {
+        if let Some(meta) = self.meta.clone() {
+            return meta.err.is_some();
+        }
+        true
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
