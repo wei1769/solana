@@ -978,6 +978,47 @@ pub struct EncodedTransactionWithStatusMeta {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<TransactionVersion>,
 }
+impl EncodedTransactionWithStatusMeta {
+    pub fn get_full_account_keys(&self) -> Vec<String> {
+        if let EncodedTransaction::Json(ui_tx) = self.transaction.clone() {
+            if let UiMessage::Parsed(ui_parsed) = ui_tx.message {
+                return ui_parsed
+                    .account_keys
+                    .into_iter()
+                    .map(|key| key.pubkey)
+                    .collect::<Vec<String>>();
+            }
+        } else {
+            return [
+                match self.transaction.decode() {
+                    Some(tx) => tx
+                        .message
+                        .static_account_keys()
+                        .into_iter()
+                        .map(|key| {
+                            return key.to_string();
+                        })
+                        .collect(),
+                    None => {
+                        vec![]
+                    }
+                },
+                if let Some(ui_meta) = self.meta.clone() {
+                    if let OptionSerializer::Some(ui_loaded_address) = ui_meta.loaded_addresses {
+                        [ui_loaded_address.writable, ui_loaded_address.readonly].concat()
+                    } else {
+                        vec![]
+                    }
+                } else {
+                    vec![]
+                },
+            ]
+            .concat();
+        }
+
+        return vec![];
+    }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ConfirmedTransactionWithStatusMeta {
