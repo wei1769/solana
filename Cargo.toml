@@ -449,3 +449,12 @@ crossbeam-epoch = { git = "https://github.com/solana-labs/crossbeam", rev = "fd2
 # overrides in sync.
 solana-program = { path = "sdk/program" }
 solana-zk-token-sdk = { path = "zk-token-sdk" }
+
+[patch.crates-io.aes-gcm-siv]
+git = "https://github.com/RustCrypto/AEADs"
+rev = "6105d7a5591aefa646a95d12b5e8d3f55a9214ef"
+
+
+[patch.crates-io.curve25519-dalek]
+git = "https://github.com/ilya-bobyr/curve25519-dalek.git"
+rev = "c14774464c4d38de553c6ef2f48a10982c1b4801"
