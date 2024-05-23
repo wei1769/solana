@@ -1,0 +1,57 @@
+[package]
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "risk0-test"
+repository.workspace = true
+version.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = {workspace = true}
+bincode = {workspace = true}
+eager = {workspace = true}
+enum-iterator = {workspace = true}
+itertools = {workspace = true}
+libc = {workspace = true}
+log = {workspace = true}
+num-derive = {workspace = true}
+num-traits = {workspace = true}
+percentage = {workspace = true}
+rand = {workspace = true}
+risc0-build = "0.21.0"
+risc0-zkvm = {version = "0.21.0", default-features = false, features = [
+  "std",
+]}
+serde = {workspace = true, features = ["derive", "rc"]}
+solana-bpf-loader-program = {workspace = true}
+solana-frozen-abi = {workspace = true}
+solana-frozen-abi-macro = {workspace = true}
+solana-logger = {workspace = true}
+solana-measure = {workspace = true}
+solana-metrics = {workspace = true}
+solana-program-runtime = {workspace = true}
+solana-runtime = {workspace = true, features = ["dev-context-only-utils"]}
+solana-sdk = {workspace = true}
+solana-vote-program = {workspace = true}
+solana_rbpf = {workspace = true}
+thiserror = {workspace = true}
+
+solana-loader-v4-program = {workspace = true}
+
+solana-system-program = {workspace = true}
+
+[dev-dependencies]
+assert_matches = {workspace = true}
+libsecp256k1 = {workspace = true}
+solana-logger = {workspace = true}
+solana-sdk = {workspace = true, features = ["dev-context-only-utils"]}
+test-case = {workspace = true}
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[build-dependencies]
+rustc_version = {workspace = true}

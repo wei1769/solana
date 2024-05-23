@@ -394,7 +394,7 @@ pub fn responder(
             let mut errors = 0;
             let mut last_error = None;
             let mut last_print = 0;
-            let mut stats = None;
+            let mut stats: Option<StreamerSendStats> = None;
 
             if stats_reporter_sender.is_some() {
                 stats = Some(StreamerSendStats::default());

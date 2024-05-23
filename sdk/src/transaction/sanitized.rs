@@ -27,7 +27,7 @@ use {
 pub const MAX_TX_ACCOUNT_LOCKS: usize = 128;
 
 /// Sanitized transaction and the hash of its message
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, Deserialize, Serialize)]
 pub struct SanitizedTransaction {
     message: SanitizedMessage,
     message_hash: Hash,

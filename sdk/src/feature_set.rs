@@ -1074,6 +1074,9 @@ impl FeatureSet {
         self.activated_slot(&reduce_stake_warmup_cooldown::id())
             .map(|slot| epoch_schedule.get_epoch(slot))
     }
+    pub fn d_clone(&self) -> Self {
+        return self.clone();
+    }
 }
 
 #[cfg(test)]

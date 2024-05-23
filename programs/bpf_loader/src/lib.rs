@@ -1336,7 +1336,7 @@ fn execute<'a, 'b: 'a>(
 
     // save the account addresses so in case we hit an AccessViolation error we
     // can map to a more specific error
-    let account_region_addrs = accounts_metadata
+    let account_region_addrs: Vec<std::ops::Range<u64>> = accounts_metadata
         .iter()
         .map(|m| {
             let vm_end = m
@@ -1351,7 +1351,7 @@ fn execute<'a, 'b: 'a>(
         })
         .collect::<Vec<_>>();
 
-    let mut create_vm_time = Measure::start("create_vm");
+    let mut create_vm_time: Measure = Measure::start("create_vm");
     let mut execute_time;
     let execution_result = {
         let compute_meter_prev = invoke_context.get_remaining();

@@ -78,7 +78,7 @@ members = [
     "quic-client",
     "rayon-threadlimit",
     "rbpf-cli",
-    "remote-wallet",
+    "remote-wallet", "risk0-test",
     "rpc",
     "rpc-client",
     "rpc-client-api",

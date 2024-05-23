@@ -579,6 +579,26 @@ impl<FG: ForkGraph> TransactionBatchProcessor<FG> {
     ) -> TransactionExecutionResult {
         let transaction_accounts = std::mem::take(&mut loaded_transaction.accounts);
 
+        let tx_accounts_clone: Vec<(Pubkey, AccountSharedData)> = transaction_accounts
+            .clone()
+            .into_iter()
+            .map(|tup| {
+                let key = tup.0.clone();
+                let data = (*tup.1.data()).to_vec();
+                let mut account_data =
+                    AccountSharedData::new(tup.1.lamports(), data.len(), tup.1.owner());
+                account_data.set_data_from_slice(&data);
+                (key, account_data)
+            })
+            .collect();
+        let rent_clone = callback.get_rent_collector().rent.clone();
+        let tx_clone = tx.clone();
+        let env_clone = programs_loaded_for_tx_batch.environments.clone();
+        let indices = loaded_transaction.program_indices.clone();
+        let feature_set_clone = callback.get_feature_set().d_clone();
+        let sysvar_cache_clone = self.sysvar_cache.read().unwrap().clone();
+        let programs_loaded_for_tx_batch_clone = programs_loaded_for_tx_batch.clone();
+        
         fn transaction_accounts_lamports_sum(
             accounts: &[(Pubkey, AccountSharedData)],
             message: &SanitizedMessage,
@@ -619,7 +639,6 @@ impl<FG: ForkGraph> TransactionBatchProcessor<FG> {
         } else {
             None
         };
-
         let (blockhash, lamports_per_signature) =
             callback.get_last_blockhash_and_lamports_per_signature();
 
