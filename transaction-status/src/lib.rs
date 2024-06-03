@@ -978,7 +978,33 @@ pub struct EncodedTransactionWithStatusMeta {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<TransactionVersion>,
 }
+impl<T> OptionSerializer<T> {}
 impl EncodedTransactionWithStatusMeta {
+    pub fn get_full_account_keys_with_token_owners(&self) -> Vec<String> {
+        let mut base = self.get_full_account_keys();
+        if let Some(meta) = &self.meta {
+            let pre_owners = if let OptionSerializer::Some(pre) = &meta.pre_token_balances {
+                pre.into_iter()
+                    .filter_map(|balance| balance.owner.clone().to_option())
+                    .collect::<Vec<String>>()
+            } else {
+                vec![]
+            };
+            let post_owners = if let OptionSerializer::Some(pre) = &meta.post_token_balances {
+                pre.into_iter()
+                    .filter_map(|balance| balance.owner.clone().to_option())
+                    .collect::<Vec<String>>()
+            } else {
+                vec![]
+            };
+            for owner in vec![post_owners, pre_owners].into_iter().flatten() {
+                if !base.contains(&owner) {
+                    base.push(owner);
+                }
+            }
+        }
+        base
+    }
     pub fn get_full_account_keys(&self) -> Vec<String> {
         if let EncodedTransaction::Json(ui_tx) = self.transaction.clone() {
             if let UiMessage::Parsed(ui_parsed) = ui_tx.message {

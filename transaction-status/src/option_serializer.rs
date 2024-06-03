@@ -34,6 +34,9 @@ impl<T> OptionSerializer<T> {
             OptionSerializer::Skip => OptionSerializer::Skip,
         }
     }
+    pub fn to_option(self) -> Option<T>{
+        self.into()
+    }
 }
 
 impl<T> From<Option<T>> for OptionSerializer<T> {
